@@ -1,0 +1,13 @@
+HYD Hyderabad
+DEL Delhi
+BOM Mumbai
+BLR Bengaluru
+MAA Chennai
+CCU Kolkata
+PNQ Pune
+AMD Ahmedabad
+GOI Goa
+COK Kochi
+JAI Jaipur
+VTZ Visakhapatnam
+LKO Lucknow
