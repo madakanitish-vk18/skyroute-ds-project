@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <string.h>
 #include "controller.h"
 #include "view.h"
@@ -119,7 +118,7 @@ void controller_run(Graph *g, const char *af, const char *ff) {
         view_menu();
         int choice;
         if (!view_read_int("Choice: ", &choice)) {
-            if (feof(stdin)) break;
+            if (view_input_closed()) break;
             view_message("Please enter a number from the menu.");
             continue;
         }

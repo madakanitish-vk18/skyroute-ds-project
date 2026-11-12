@@ -71,6 +71,7 @@ int graph_add_flight(Graph *g, int s, int d, int cost, int dur, const char *airl
     f->duration = dur;
     f->active = 1;
     snprintf(f->airline, sizeof f->airline, "%s", airline);
+    for (char *p = f->airline; *p; p++) if (*p == ' ') *p = '_';   /* keep one word per field in the file */
     return 1;
 }
 
@@ -102,20 +103,24 @@ int graph_set_airport_closed(Graph *g, int idx, int closed) {
     return 1;
 }
 
-/* Files: airports.txt -> "CODE City"   flights.txt -> "SRC DST cost minutes Airline" */
+/* Files: airports.txt -> "CODE City"   flights.txt -> "SRC DST cost minutes Airline"
+ * Each line is read separately; a malformed line is skipped, it does not stop the loading. */
 int graph_load(Graph *g, const char *airports_file, const char *flights_file) {
+    char line[160];
     FILE *fa = fopen(airports_file, "r");
     if (!fa) return 0;
     char code[8], city[64];
-    while (fscanf(fa, "%7s %63s", code, city) == 2) graph_add_airport(g, code, city);
+    while (fgets(line, sizeof line, fa))
+        if (sscanf(line, "%7s %63s", code, city) == 2) graph_add_airport(g, code, city);
     fclose(fa);
 
     FILE *ff = fopen(flights_file, "r");
     if (!ff) return 0;
     char a[8], b[8], airline[32];
     int cost, dur;
-    while (fscanf(ff, "%7s %7s %d %d %31s", a, b, &cost, &dur, airline) == 5)
-        graph_add_flight(g, graph_find(g, a), graph_find(g, b), cost, dur, airline);
+    while (fgets(line, sizeof line, ff))
+        if (sscanf(line, "%7s %7s %d %d %31s", a, b, &cost, &dur, airline) == 5)
+            graph_add_flight(g, graph_find(g, a), graph_find(g, b), cost, dur, airline);
     fclose(ff);
     return 1;
 }

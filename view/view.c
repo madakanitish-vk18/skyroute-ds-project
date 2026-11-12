@@ -36,6 +36,10 @@ int view_read_line(const char *prompt, char *buf, size_t n) {
     printf("%s", prompt);
     fflush(stdout);
     if (!fgets(buf, (int)n, stdin)) return 0;
+    if (strchr(buf, '\n') == NULL) {                /* line was longer than the buffer */
+        int ch;
+        while ((ch = getchar()) != '\n' && ch != EOF) ;   /* discard the rest of it */
+    }
     buf[strcspn(buf, "\r\n")] = '\0';
     return 1;
 }
@@ -48,6 +52,8 @@ int view_read_int(const char *prompt, int *out) {
     *out = (int)v;
     return 1;
 }
+
+int view_input_closed(void) { return feof(stdin); }
 
 void view_show_airports(const Graph *g) {
     printf("\n%-5s %-16s %s\n", "Code", "City", "Status");

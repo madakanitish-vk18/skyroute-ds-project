@@ -10,6 +10,7 @@ void view_menu(void);
 void view_message(const char *msg);
 int  view_read_line(const char *prompt, char *buf, size_t n); /* 0 on EOF */
 int  view_read_int(const char *prompt, int *out);             /* 1 if valid */
+int  view_input_closed(void);                                 /* 1 if input has ended (EOF) */
 void view_show_airports(const Graph *g);
 void view_show_flights_from(const Graph *g, int idx);
 void view_show_route(const Graph *g, const Route *r, const char *title);
